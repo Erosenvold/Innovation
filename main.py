@@ -43,18 +43,18 @@ def customAllergy():
         if item:
             customAllergene.append("en:"+item)
             customAllergene.append(item)
-            if not item.endswith('s'): 
+            if not item.endswith('s'):
                 customAllergene.append("en:"+item+'s')
                 customAllergene.append(item+'s')
         else:
             print("Please enter something")
             print()
 
-        print("Do you wish to enter another allergen? Y/N")
+        print("\nDo you wish to enter another allergen? Y/N")
         answer = input().lower()
         done = True if answer == 'n' else False
         print()
-    
+
     allergens["CustomAllergy"] = customAllergene
 
 
@@ -62,16 +62,16 @@ def customAllergy():
 def edible(req):
     global keywordsExists,allergensExists,ingredientsExists,foundRestrictions,vegetarian,vegan
     edible = True
-    
+
     #Vegetarian Checks
     if (req == 1):
         if ingredientsExists and vegetarian == "no":
             edible = False
-            
+
         elif keywordsExists:
             edible = False if foundRestrictions["vegetarianKeywords"] else True
-    
-    #Vegan checks        
+
+    #Vegan checks
     if req == 2:
         if ingredientsExists and vegan == "no":
             edible = False
@@ -79,20 +79,20 @@ def edible(req):
             edible = False if foundRestrictions["vegetarianKeywords"] and foundRestrictions["veganKeywords"] and foundRestrictions["lactoseKeywords"] else True
         elif allergensExists:
             edible = False if foundRestrictions["lactoseAllergy"] else True
-    
-    #Nut allergy checks            
+
+    #Nut allergy checks
     if req == 3:
         if keywordsExists:
             edible = False if foundRestrictions["nutKeywords"] else True
-            
+
         elif allergensExists:
             edible = False if foundRestrictions["nutAllergy"] else True
-    
-    #Lactose checks        
+
+    #Lactose checks
     if req == 4:
         if keywordsExists:
             edible = False if foundRestrictions["lactoseKeywords"] else True
-            
+
         elif allergensExists:
             edible = False if foundRestrictions["lactoseAllergy"] else True
 
@@ -101,8 +101,8 @@ def edible(req):
             edible = False if foundRestrictions["customIngrKeywords"] else True
         elif allergensExists:
             edible = False if foundRestrictions["customIngrAllergy"] else True
-    
-    return edible   
+
+    return edible
 
 
 # Extracting keywords, ingredients, and allergens info
@@ -118,7 +118,7 @@ def extractInfo(productInfo):
         foundRestrictions["nutKeywords"] = bool(set(productKeywords) & set(allergens.get("Nut")))
         foundRestrictions["lactoseKeywords"] = bool(set(productKeywords) & set(allergens.get("Lactose")))
         foundRestrictions["customIngrKeywords"] = bool(set(productKeywords) & set(allergens.get("CustomAllergy")))
-    
+
     #Checks if allergens exists in products information
     if "allergens" in productInfo:
         productAllergens = productInfo.get("allergens").split(",")#List of strings
@@ -126,7 +126,7 @@ def extractInfo(productInfo):
         foundRestrictions["nutAllergy"] = bool(set(productAllergens) & set(allergens.get("Nut")))
         foundRestrictions["lactoseAllergy"] =  bool(set(productAllergens) & set(allergens.get("Lactose")))
         foundRestrictions["customIngrAllergy"] = bool(set(productAllergens) & set(allergens.get("CustomAllergy")))
-    
+
     #Checks if ingredients exists in products information
     if("ingredients" in productInfo):
         productIngre = productInfo.get("ingredients")[0] #dict
@@ -156,7 +156,7 @@ if __name__ == "__main__":
          #Setting variables to default values
         keywordsExists, allergensExists, ingredientsExists = False, False, False
         vegetarian, vegan = "", ""
-            
+
         for i in foundRestrictions:
             foundRestrictions[i] = False
         print("Enter the barcode of the item you would like: ")
@@ -185,4 +185,3 @@ if __name__ == "__main__":
         print()
 
         done= True if response == "n" else False
-
